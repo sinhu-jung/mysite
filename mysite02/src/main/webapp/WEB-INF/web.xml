@@ -10,6 +10,12 @@
 		<servlet-class>com.douzone.mysite.controller.MainController
 		</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>UserController</servlet-name>
+		<servlet-class>com.douzone.mysite.controller.UserController
+		</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>MainController</servlet-name>
 		<url-pattern></url-pattern>
@@ -17,6 +23,10 @@
 	<servlet-mapping>
 		<servlet-name>MainController</servlet-name>
 		<url-pattern>/main</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UserController</servlet-name>
+		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>
