@@ -125,7 +125,7 @@ public class UserRepository {
 			conn = getConnection();
 
 			String sql = 
-					  " select *" +
+					  " select no, name, email, password, gender" +
 					  "	from user " +
 					  " where no=? " ;
 			pstmt = conn.prepareStatement(sql);
@@ -167,6 +167,43 @@ public class UserRepository {
 			}
 		}
 		
+		return result;
+	}
+
+	public Boolean update(UserVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		boolean result = false;
+		try {
+			conn = getConnection();
+
+			String sql = "update user set name=?, password=?, gender=? where no=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, vo.getName());
+			pstmt.setString(2, vo.getPassword());
+			pstmt.setString(3, vo.getGender());
+			pstmt.setLong(4, vo.getNo());
+
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+
+		} catch (SQLException e) {
+			System.out.println("error: " + e);
+		} finally {
+			try {
+				// 자원 정리(clean-up)
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 		return result;
 	}
 	
