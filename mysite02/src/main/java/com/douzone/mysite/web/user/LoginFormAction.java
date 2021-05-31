@@ -1,4 +1,4 @@
-package com.douzone.mysite.mvc.user;
+package com.douzone.mysite.web.user;
 
 import java.io.IOException;
 
@@ -6,14 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.douzone.mvc.Action;
-import com.douzone.mvc.util.MVCUtils;
+import com.douzone.web.Action;
+import com.douzone.web.util.MVCUtils;
 
-public class JoinFormAction implements Action {
+public class LoginFormAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		MVCUtils.forward("user/joinform", request, response);
+		MVCUtils.forward("user/loginform", request, response);
 	}
 
 }
