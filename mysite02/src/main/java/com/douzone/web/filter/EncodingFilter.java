@@ -12,10 +12,6 @@ import javax.servlet.ServletResponse;
 public class EncodingFilter implements Filter {
 	private String encoding;
 
-	public void destroy() {
-
-	}
-
 	public void init(FilterConfig fConfig) throws ServletException {
 		encoding = fConfig.getInitParameter("encoding");
 		if (encoding == null) {
@@ -32,5 +28,8 @@ public class EncodingFilter implements Filter {
 		/* response 처리 */
 	}
 
+	public void destroy() {
+
+	}
 
 }
