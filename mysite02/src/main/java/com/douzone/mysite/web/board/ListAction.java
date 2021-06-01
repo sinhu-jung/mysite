@@ -24,8 +24,6 @@ public class ListAction implements Action {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		System.out.println(request.getParameter("kwd"));
-		
 		if(request.getParameter("kwd") != null) {
 			String keyword = request.getParameter("kwd");
 			count = new BoardRepository().findcount(keyword);
