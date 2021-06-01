@@ -16,8 +16,13 @@ public class ViewAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Long no = Long.parseLong(request.getParameter("no"));
+		int hit = Integer.parseInt(request.getParameter("hit"));
 		
 		BoardVo vo = new BoardRepository().findById(no);
+		
+		vo.setHit(hit+1);
+		new BoardRepository().updateHit(vo);
+		
 		request.setAttribute("vo", vo);
 		MVCUtils.forward("board/view", request, response);
 	}

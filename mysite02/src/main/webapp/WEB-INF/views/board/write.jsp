@@ -15,7 +15,15 @@
 		<div id="content">
 			<div id="board">
 				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board">
-					<input type = "hidden" name = "a" value="write">
+					<c:choose>
+						<c:when test='${msg eq "comment" }'>
+							<input type = "hidden" name = "a" value="comment">
+							<input type = "hidden" name = "no" value="${no }">
+						</c:when>
+						<c:when test='${msg eq "write" }'>
+							<input type = "hidden" name = "a" value="write">
+						</c:when>
+					</c:choose>
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>

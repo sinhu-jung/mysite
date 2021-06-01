@@ -30,11 +30,11 @@
 					<c:set var="count" value="${fn:length(list) }"/>
 					<c:forEach var="vo" items="${list }" varStatus="status">
 						<c:choose>
-							<c:when test='${vo.orderNo == 0 }'>
+							<c:when test='${vo.depth == 0 }'>
 								<tr>
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:0px">
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }">
+									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
@@ -44,12 +44,12 @@
 									</c:if>
 								</tr>
 							</c:when>
-							<c:when test='${vo.orderNo > 0 }'>
+							<c:when test='${vo.depth >= 1 }'>
 								<tr>
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:${vo.depth * 20 }px">
 									<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png'/>
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }">
+									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
@@ -66,7 +66,7 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
+						<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=0">◀</a></li>
 						<li><a href="/mysite02/board?p=1">1</a></li>
 						<li class="selected">2</li>
 						<li><a href="/mysite02/board?p=3">3</a></li>
@@ -78,7 +78,9 @@
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+					<c:if test="${not empty authUser }">
+						<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+					</c:if>
 				</div>				
 			</div>
 		</div>

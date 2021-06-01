@@ -118,7 +118,7 @@ public class BoardRepository {
 		try {
 			conn = getConnection();
 
-			String sql = "select no, title, contents, user_no from board where no = ?";
+			String sql = "select no, title, contents, user_no, group_no, order_no, depth from board where no = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, no);
@@ -130,12 +130,17 @@ public class BoardRepository {
 				String title = rs.getString(2);
 				String contents = rs.getString(3);
 				Long userno = rs.getLong(4);
+				int groupNo = rs.getInt(5);
+				int orderNo = rs.getInt(6);
+				int depth = rs.getInt(7);
 				
 				vo.setNo(num);
 				vo.setTitle(title);
 				vo.setContents(contents);
 				vo.setUserNo(userno);
-								
+				vo.setOrderNo(orderNo);
+				vo.setGroupNo(groupNo);
+				vo.setDepth(depth);
 			}
 
 		} catch (SQLException e) {
@@ -234,6 +239,80 @@ public class BoardRepository {
 		return result;
 	}
 	
+	public boolean updateHit(BoardVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		boolean result = false;
+		try {
+			conn = getConnection();
+
+			String sql = "update board set hit = ? where no = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, vo.getHit());
+			pstmt.setLong(2, vo.getNo());
+
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+
+		} catch (SQLException e) {
+			System.out.println("error :" + e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+
+			} catch (SQLException e) {
+				System.out.println("connection close error:" + e);
+			}
+		}
+		return result;
+	}
+	
+	public boolean insertComment(BoardVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		boolean result = false;
+		try {
+			conn = getConnection();
+			String sql = null;
+			sql = "insert into board values(null, ?, ?, now(), 0, ?, (select max(order_no)+1 from board ALIAS_FOR_SUBQUERY where group_no=?), ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContents());
+			pstmt.setInt(3, vo.getGroupNo());
+			pstmt.setInt(4, vo.getGroupNo());
+			pstmt.setInt(5, vo.getDepth()+1);
+			pstmt.setLong(6, vo.getUserNo());
+
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+
+		} catch (SQLException e) {
+			System.out.println("error: " + e);
+		} finally {
+			try {
+				// 자원 정리(clean-up)
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+		
+	}
+	
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 
@@ -247,6 +326,7 @@ public class BoardRepository {
 
 		return conn;
 	}
+
 
 
 }

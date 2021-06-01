@@ -27,7 +27,7 @@ public class WriteAction implements Action {
 			MVCUtils.redirect(request.getContextPath(), request, response);
 			return;
 		}
-		 
+		
 		Long userNo = authUser.getNo();
 		String title = request.getParameter("title");
 		String contents = request.getParameter("content");

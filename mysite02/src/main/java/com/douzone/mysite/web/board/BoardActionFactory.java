@@ -12,6 +12,8 @@ public class BoardActionFactory extends ActionFactory {
 		
 		if("view".equals(actionName)) {
 			action = new ViewAction();
+		} else if("comment".equals(actionName)) {
+			action = new CommentAction();
 		} else if("writeform".equals(actionName)) {
 			action = new WriteFormAction();
 		} else if("write".equals(actionName)) {
@@ -22,8 +24,6 @@ public class BoardActionFactory extends ActionFactory {
 			action = new ModifyFormAction();
 		} else if("modify".equals(actionName)) {
 			action = new ModifyAction();
-		} else if("comment".equals(actionName)) {
-			action = new CommentAction();
 		} else {// default Action
 			action = new ListAction();
 		}
