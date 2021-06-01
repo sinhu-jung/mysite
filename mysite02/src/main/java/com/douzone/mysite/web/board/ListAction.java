@@ -17,14 +17,26 @@ public class ListAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int page = 0;
+		int count = 0;
+		List<BoardVo>list = null;
+		
 		if(request.getParameter("page") != null) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
-		int count = new BoardRepository().count();
+		
+		System.out.println(request.getParameter("kwd"));
+		
+		if(request.getParameter("kwd") != null) {
+			String keyword = request.getParameter("kwd");
+			count = new BoardRepository().findcount(keyword);
+			list = new BoardRepository().findAllkey(page, keyword);
+		} else {
+			count = new BoardRepository().count();
+			list = new BoardRepository().findAll(page);
+		}
+		
 		int firstpage = 0;
 		int lastpage = (int) Math.ceil(count/5);
-		
-		List<BoardVo> list = new BoardRepository().findAll(page);
 		int size = list.size();
 		
 		request.setAttribute("firstPage", firstpage);
