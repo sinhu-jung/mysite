@@ -70,10 +70,10 @@
 							<c:forEach begin="0" end="${lastPage -1}" var="lastPage" varStatus="status">
 								<c:choose>
 									<c:when test="${param.page == status.index }">
-										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${status.index }">${status.count }</a></li>
+										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
 									</c:when>
 									<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${status.index }">${status.count }</a></li>
+										<li><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>

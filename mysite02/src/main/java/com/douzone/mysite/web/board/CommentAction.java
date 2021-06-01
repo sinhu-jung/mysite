@@ -33,34 +33,28 @@ public class CommentAction implements Action {
 		String title = request.getParameter("title");
 		String contents = request.getParameter("content");
 
-		BoardVo vo = new BoardRepository().findById(no);
-		int groupNo = vo.getGroupNo();
-		int depth = vo.getDepth();
-		int orderNo = vo.getOrderNo();
-
-		if (vo.getDepth() == 0) {
-			vo = new BoardVo();
-			vo.setTitle(title);
-			vo.setContents(contents);
-			vo.setUserNo(userNo);
-			vo.setGroupNo(groupNo);
+		BoardVo vo1 = new BoardRepository().findById(no);
+		int groupNo = vo1.getGroupNo();
+		int depth = vo1.getDepth();
+		int orderNo = vo1.getOrderNo();
+		
+		BoardVo vo = new BoardVo();
+		vo.setTitle(title);
+		vo.setContents(contents);
+		vo.setUserNo(userNo);
+		vo.setGroupNo(groupNo);
+		
+		if (vo1.getDepth() == 0) {
 			vo.setOrderNo(1);
 			vo.setDepth(depth + 1);
 			new BoardRepository().updatComment(groupNo);
-			new BoardRepository().insertComment(vo);
-			MVCUtils.redirect(request.getContextPath() + "/board", request, response);
-		} else if (vo.getDepth() >= 1) {
-			vo = new BoardVo();
-			vo.setTitle(title);
-			vo.setContents(contents);
-			vo.setUserNo(userNo);
-			vo.setGroupNo(groupNo);
+		} else if (vo1.getDepth() >= 1) {
 			vo.setOrderNo(orderNo + 1);
 			vo.setDepth(depth + 1);
 			new BoardRepository().updatComment2(groupNo, orderNo);
-			new BoardRepository().insertComment(vo);
-			MVCUtils.redirect(request.getContextPath() + "/board", request, response);
 		}
+		new BoardRepository().insertComment(vo);
+		MVCUtils.redirect(request.getContextPath() + "/board", request, response);
 	}
 
 }
