@@ -47,7 +47,7 @@ public class BoardRepository {
 		return result;
 	}
 
-	public List<BoardVo> findAll() {
+	public List<BoardVo> findAll(int page) {
 		List<BoardVo> result = new ArrayList<>();
 
 		Connection conn = null;
@@ -60,8 +60,10 @@ public class BoardRepository {
 			String sql = "select a.no, a.title, a.depth, a.hit, b.no as userNo, b.name, a.reg_date " +
 					 " from board a, user b " +
 					 " where a.user_no = b.no " +
-					 " order by a.group_no DESC, a.order_no ASC";
+					 " order by a.group_no DESC, a.order_no ASC limit ?,5";
+			
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, page*5);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -311,6 +313,44 @@ public class BoardRepository {
 
 		return result;
 		
+	}
+	
+	public int count() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+
+			String sql = "select count(*) from board";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("error: " + e);
+		} finally {
+			try {
+				// 자원 정리(clean-up)
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return -1;
 	}
 	
 	private Connection getConnection() throws SQLException {

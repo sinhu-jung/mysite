@@ -16,7 +16,20 @@ public class ListAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<BoardVo> list = new BoardRepository().findAll();
+		int page = 0;
+		if(request.getParameter("page") != null) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		int count = new BoardRepository().count();
+		int firstpage = 0;
+		int lastpage = (int) Math.ceil(count/5);
+		
+		List<BoardVo> list = new BoardRepository().findAll(page);
+		int size = list.size();
+		
+		request.setAttribute("firstPage", firstpage);
+		request.setAttribute("lastPage", lastpage);
+		request.setAttribute("size", size);
 		request.setAttribute("list", list);
 		MVCUtils.forward("board/list", request, response);
 	}

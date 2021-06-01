@@ -19,7 +19,6 @@ public class ViewAction implements Action {
 		int hit = Integer.parseInt(request.getParameter("hit"));
 		
 		BoardVo vo = new BoardRepository().findById(no);
-		
 		vo.setHit(hit+1);
 		new BoardRepository().updateHit(vo);
 		
