@@ -464,57 +464,26 @@ public class BoardRepository {
 		return -1;
 	}
 	
-	public Boolean updatComment(int no) {
+	public Boolean updatComment(int no, int orderNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
 
 		try {
 			conn = getConnection();
-
-			String sql = "update board set order_no=order_no+1\r\n" + "where group_no = ? and order_no>=1";
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setInt(1, no);
-
-			int count = pstmt.executeUpdate();
-			result = count == 1;
-
-		} catch (SQLException e) {
-			System.out.println("error:" + e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-
-				if (conn != null) {
-					conn.close();
-				}
-
-			} catch (Exception e2) {
-				// TODO: handle exception
+			String sql = null;
+			if(orderNo > 1) {
+				sql = "update board set order_no=order_no+1 where group_no = ? and order_no>?";
+			} else {
+				sql = "update board set order_no=order_no+1 where group_no = ? and order_no>=1";
 			}
-		}
-
-		return result;
-	}
-	
-	public Boolean updatComment2(int no, int orderNo) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		boolean result = false;
-
-		try {
-			conn = getConnection();
-
-			String sql = "update board set order_no=order_no+1\r\n" + "where group_no = ? and order_no>?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, no);
-			pstmt.setInt(2, orderNo);
+			if(orderNo > 1) {
+				pstmt.setInt(2, orderNo);
+			}
 
-			// 5. SQL문을 실행
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 
