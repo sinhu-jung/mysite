@@ -46,12 +46,11 @@ public class CommentAction implements Action {
 		
 		if (vo1.getDepth() == 0) {
 			vo.setOrderNo(1);
-			vo.setDepth(depth + 1);
 		} else if (vo1.getDepth() >= 1) {
 			vo.setOrderNo(orderNo + 1);
-			vo.setDepth(depth + 1);
 		}
 		
+		vo.setDepth(depth + 1);
 		new BoardRepository().updatComment(groupNo, orderNo);
 		new BoardRepository().insertComment(vo);
 		MVCUtils.redirect(request.getContextPath() + "/board", request, response);
