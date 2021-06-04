@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.GuestbookRepositoryException;
 import com.douzone.mysite.vo.GuestbookVo;
 
 @Repository
@@ -95,7 +96,7 @@ public class GuestbookRepository {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error: " + e);
+			throw new GuestbookRepositoryException(e.getMessage());
 		} finally {
 			try {
 				// 자원 정리(clean-up)
@@ -109,7 +110,7 @@ public class GuestbookRepository {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new GuestbookRepositoryException(e.getMessage());
 			}
 		}
 

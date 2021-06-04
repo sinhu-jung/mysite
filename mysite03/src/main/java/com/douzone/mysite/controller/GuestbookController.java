@@ -42,4 +42,10 @@ public class GuestbookController {
 		guestbookService.deleteMessage(no, password);
 		return "redirect:/guestbook";
 	}
+	
+//	@ExceptionHandler(Exception.class)
+//	public String handlerException() { 
+//		return "error/exception";
+//		
+//	}
 }
