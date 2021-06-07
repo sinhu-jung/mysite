@@ -2,9 +2,12 @@ package com.douzone.mysite.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.douzone.mysite.vo.UserVo;
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
@@ -28,6 +31,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		}
 		
 		//5.@Auth가 붙어 있기 때문에 인증 (Authenfication) 여부 확인 
+		HttpSession session = request.getSession();
+		if(session == null) {
+			response.sendRedirect(request.getContextPath() + "/user/login");
+			return false;
+		}
+		
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) {
+			response.sendRedirect(request.getContextPath() + "/user/login");
+			return false;
+		}
 		
 		return true;
 	}

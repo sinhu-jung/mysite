@@ -28,6 +28,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		
+		//session 처리 
+		System.out.println(authUser);
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);
 		response.sendRedirect(request.getContextPath());
