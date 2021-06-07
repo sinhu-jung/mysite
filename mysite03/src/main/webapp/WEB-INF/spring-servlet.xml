@@ -15,6 +15,29 @@
 
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
 	<mvc:default-servlet-handler/>
+	
+	<!-- Interceptors -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/auth"/>
+			<bean class="com.douzone.mysite.security.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/logout"/>
+			<bean class="com.douzone.mysite.security.LogoutInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/user/auth"/>
+			<mvc:exclude-mapping path="/user/logout"/>
+			<mvc:exclude-mapping path="/assets/**"/>
+			<bean class="com.douzone.mysite.security.AuthInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 	<!-- ViewResolver 설정 -->
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
