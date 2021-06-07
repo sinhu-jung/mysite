@@ -14,7 +14,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.servletContext.contextPath }/board" method="post">
+				<form id="search_form" action="${pageContext.servletContext.contextPath }/board/${page.firstPage}" method="GET">
 					<input type="text" id="kwd" name="kwd" value=>
 					<input type="submit" value="찾기">
 				</form>
@@ -34,13 +34,13 @@
 								<tr>
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:0px">
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
+									<a href="${pageContext.servletContext.contextPath }/board/view/${vo.no }/${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
 									<td>${vo.regDate }</td>
 									<c:if test="${vo.userNo == authUser.no }">
-										<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&userNo=${vo.userNo}&no=${vo.no}" 
+										<td><a href="${pageContext.servletContext.contextPath }/board/delete/${vo.userNo}/${vo.no}" 
 										class="del" style='background-image:url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a></td>
 									</c:if>
 								</tr>
@@ -50,13 +50,13 @@
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:${vo.depth * 20 }px">
 									<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png'/>
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
+									<a href="${pageContext.servletContext.contextPath }/board/view/${vo.no }/${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
 									<td>${vo.regDate }</td>
 									<c:if test="${vo.userNo == authUser.no }">
-										<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&userNo=${vo.userNo}&no=${vo.no}" 
+										<td><a href="${pageContext.servletContext.contextPath }/board/delete/${vo.userNo}/${vo.no}" 
 										class="del" style='background-image:url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a></td>
 									</c:if>
 								</tr>
@@ -68,25 +68,18 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="${pageContext.servletContext.contextPath }/board?page=0">◀</a></li>
-							<c:forEach begin="0" end="${lastPage -1}" var="lastPage" varStatus="status">
-								<c:choose>
-									<c:when test="${param.page == status.index }">
-										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
-									</c:when>
-									<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-						<li><a href="${pageContext.servletContext.contextPath }/board?page=${lastPage - 1 }">▶</a></li>
+						<li><c:if test="${page.currentPage != 1 }"><a href="${pageContext.servletContext.contextPath }/board/${page.prevPage}">◀</a></c:if></li>
+						<c:forEach var="p" begin="${page.leftPage }" end="${page.rightPage }" step="1">
+							<li <c:if test="${p==page.currentPage }">class="selected"</c:if>><a href="${pageContext.servletContext.contextPath }/board/${p}">${p }</a></li>
+						</c:forEach>
+						<li><c:if test="${page.currentPage != page.lastPage }"><a href="${pageContext.servletContext.contextPath }/board/${page.nextPage}">▶</a></c:if></li>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
 					<c:if test="${not empty authUser }">
-						<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						<a href="${pageContext.servletContext.contextPath }/board/write" id="new-book">글쓰기</a>
 					</c:if>
 				</div>				
 			</div>

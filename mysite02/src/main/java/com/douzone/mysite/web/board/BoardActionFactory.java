@@ -24,8 +24,6 @@ public class BoardActionFactory extends ActionFactory {
 			action = new ModifyFormAction();
 		} else if("modify".equals(actionName)) {
 			action = new ModifyAction();
-		} else if("findkey".equals(actionName)) {
-			action = new FindKeywordAction();
 		} else {// default Action
 			action = new ListAction();
 		}
