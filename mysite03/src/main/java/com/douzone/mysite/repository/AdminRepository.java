@@ -101,7 +101,7 @@ public class AdminRepository {
 
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mysql://192.168.142.101:3307/webdb?characterEncoding=utf8";
+			String url = "jdbc:mysql://192.168.80.103:3307/webdb?characterEncoding=utf8";
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
