@@ -27,7 +27,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		
 		//4. Handler Method에 @Auth가 없으면 Type에 붙어 있는지 확인한다.
 		if(auth == null) {
-			//auth =
+			auth = handlerMethod.getMethod().getDeclaringClass().getAnnotation(Auth.class);
 		}
 		
 		//5. Type 이나 Method 둘 다 @Auth가 적용이 안되어 있는 경우
@@ -52,6 +52,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		String role = auth.role();
 		String authRole = authUser.getRole();
 		
+		if("USER".equals(role)) {
+			return true;
+		}
+		
+		if("ADMIN".equals(authRole) == false) { 
+			response.sendRedirect(request.getContextPath());
+			return false;
+		}
 		return true;
 	}
 

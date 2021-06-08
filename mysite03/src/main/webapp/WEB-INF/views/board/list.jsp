@@ -27,20 +27,21 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<c:set var="count" value="${fn:length(list) }"/>
-					<c:forEach var="vo" items="${list }" varStatus="status">
+					<c:set var="count" value="${fn:length(map.list) }"/>
+					<c:forEach var="vo" items="${map.list }" varStatus="status">
 						<c:choose>
 							<c:when test='${vo.depth == 0 }'>
 								<tr>
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:0px">
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
+									<a href="${pageContext.servletContext.contextPath }/board/view?no=${vo.no }&hit=${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
 									<td>${vo.regDate }</td>
 									<c:if test="${vo.userNo == authUser.no }">
-										<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&userNo=${vo.userNo}&no=${vo.no}" class="del">삭제</a></td>
+										<td><a href="${pageContext.servletContext.contextPath }/board/delete?userNo=${vo.userNo}&no=${vo.no}" class="del"
+										style='background-image:url("/mysite03/assets/images/recycle.png")'>삭제</a></td>
 									</c:if>
 								</tr>
 							</c:when>
@@ -49,13 +50,14 @@
 									<td>${count-status.index }</td>
 									<td style="text-align:left; padding-left:${vo.depth * 20 }px">
 									<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png'/>
-									<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no }&hit=${vo.hit}">
+									<a href="${pageContext.servletContext.contextPath }/board/view?no=${vo.no }&hit=${vo.hit}">
 									${vo.title }</a></td>
 									<td>${vo.userName }</td>
 									<td>${vo.hit }</td>
 									<td>${vo.regDate }</td>
 									<c:if test="${vo.userNo == authUser.no }">
-										<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&userNo=${vo.userNo}&no=${vo.no}" class="del">삭제</a></td>
+										<td><a href="${pageContext.servletContext.contextPath }/board/delete?userNo=${vo.userNo}&no=${vo.no}" class="del" 
+										style='background-image:url("/mysite03/assets/images/recycle.png")'>삭제</a></td>
 									</c:if>
 								</tr>
 							</c:when>
@@ -66,25 +68,33 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="${pageContext.servletContext.contextPath }/board?page=0">◀</a></li>
-							<c:forEach begin="0" end="${page.lastPage -1}" var="lastPage" varStatus="status">
-								<c:choose>
-									<c:when test="${param.page == status.index }">
-										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
-									</c:when>
-									<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board?page=${status.index }">${status.count }</a></li>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-						<li><a href="${pageContext.servletContext.contextPath }/board?page=${page.lastPage - 1 }">▶</a></li>
+						<c:if test="${map.prevPage > 0 }" >
+							<li><a href="${pageContext.request.contextPath }/board?p=${map.prevPage }&kwd=${map.keyword }">◀</a></li>
+						</c:if>
+						
+						<c:forEach begin="${map.beginPage }" end="${map.beginPage + map.listSize - 1 }" var="page">
+							<c:choose>
+								<c:when test="${map.endPage < page }">
+									<li>${page }</li>
+								</c:when> 
+								<c:when test="${map.currentPage == page }">
+									<li class="selected">${page }</li>
+								</c:when>
+								<c:otherwise> 
+									<li><a href="${pageContext.request.contextPath }/board?p=${page }&kwd=${map.keyword }">${page }</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:if test="${map.nextPage > 0 }" >
+							<li><a href="${pageContext.request.contextPath }/board?p=${map.nextPage }&kwd=${map.keyword }">▶</a></li>
+						</c:if>	
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
 					<c:if test="${not empty authUser }">
-						<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						<a href="${pageContext.servletContext.contextPath }/board/write?msg=write" id="new-book">글쓰기</a>
 					</c:if>
 				</div>				
 			</div>

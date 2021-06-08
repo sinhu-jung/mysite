@@ -16,82 +16,43 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 	
-	public Map<String, Integer> viewPage(int page, String kwd) {
-		int count = 0;
-		if (kwd == null) {
-			count = boardRepository.count();
-		} else {
-			count = new BoardRepository().findcount(kwd);
-		}
-		int firstPage, currentPage, displayRow, leftPage, rightPage, lastPage;
+	public Map<String, Object> viewPage(int page, String kwd) {
+		int listSize = 5;
+		int pageSize = 5;
+		int totalCount = new BoardRepository().findcount(kwd);
+		int pageCount = (int)Math.ceil( (double)totalCount / listSize );
+		int blockCount = (int)Math.ceil( (double)pageCount / pageSize );
+		int currentBlock = (int)Math.ceil( (double)page / pageSize );
 		
-		if(page == 0) {
-			currentPage = 1;
-		} else {
-			currentPage = page;
-		}
-		int nextPage = currentPage + 1;
-		int prevPage = currentPage - 1;
+		if( page > pageCount ) {
+			page = pageCount;
+			currentBlock = (int)Math.ceil( (double)page / pageSize );
+		}		
 		
-		displayRow = 5;
-		
-		leftPage = currentPage - 2;
-		rightPage = currentPage + 2;
-		
-		int totalPage = (int) Math.ceil(count/ displayRow);
-		
-		if(leftPage < 2) {
-			leftPage = 1;
-			rightPage = 5;
+		if( page < 1 ) {
+			page = 1;
+			currentBlock = 1;
 		}
 		
-		if(rightPage > totalPage) {
-			rightPage = totalPage;
-			leftPage = totalPage - 4;
-		}
+		int beginPage = currentBlock == 0 ? 1 : (currentBlock - 1) * pageSize + 1;
+		int prevPage = ( currentBlock > 1 ) ? ( currentBlock - 1 ) * pageSize : 0;
+		int nextPage = ( currentBlock < blockCount ) ? currentBlock * pageSize + 1 : 0;
+		int endPage = ( nextPage > 0 ) ? ( beginPage - 1 ) + listSize : pageCount;
 		
-		if(totalPage == 1 ) {
-			lastPage = 1;
-		} else {
-			lastPage = totalPage;
-		}
+		List<BoardVo> list = boardRepository.findAllByPageAndKeword( kwd, page, listSize );
 		
-		if(totalPage < 5) {
-			leftPage = 1;
-			rightPage = totalPage;
-		}
-		
-		firstPage = 1;
-		
-		if(totalPage == 0) {
-			leftPage = 1;
-			rightPage = 1;
-			lastPage = 1;
-		}
-		
-		Map<String, Integer> map = new HashMap<>();
-		map.put("currentPage", currentPage);
-		map.put("lastPage", lastPage);
-		map.put("nextPage", nextPage);
-		map.put("prevPage", prevPage);
-		map.put("totalPage", totalPage);
-		map.put("firstPage", firstPage);
-		map.put("count", count);
-		map.put("leftPage", leftPage);
-		map.put("rightPage", rightPage);
-		map.put("displayRow", displayRow);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put( "list", list );
+		map.put( "totalCount", totalCount );
+		map.put( "listSize", listSize );
+		map.put( "currentPage", page );
+		map.put( "beginPage", beginPage );
+		map.put( "endPage", endPage );
+		map.put( "prevPage", prevPage );
+		map.put( "nextPage", nextPage );
+		map.put( "keyword", kwd );
 		
 		return map;
-	}
-
-	public List<BoardVo> viewList(int page, String kwd) {
-		List<BoardVo> list = null;
-		if(kwd == null) {
-			list = boardRepository.findAll(page);
-		} else {
-			list = boardRepository.findAllkey(page, kwd);
-		}
-		return list;
 	}
 
 	public BoardVo view(Long no, int hit) {
@@ -111,5 +72,32 @@ public class BoardService {
 
 	public void deleteAction(Long no, Long userNo) {
 		boardRepository.delete(no, userNo);
+	}
+
+	public void commentAction(String title, String content, Long no, UserVo authUser) {
+		BoardVo vo1 = new BoardRepository().findById(no);
+		int groupNo = vo1.getGroupNo();
+		int depth = vo1.getDepth();
+		int orderNo = vo1.getOrderNo();
+		
+		BoardVo vo = new BoardVo();
+		vo.setTitle(title);
+		vo.setContents(content);
+		vo.setUserNo(authUser.getNo());
+		vo.setGroupNo(groupNo);
+		
+		if (vo1.getDepth() == 0) {
+			vo.setOrderNo(1);
+		} else if (vo1.getDepth() >= 1) {
+			vo.setOrderNo(orderNo + 1);
+		}
+		
+		vo.setDepth(depth + 1);
+		boardRepository.updatComment(groupNo, orderNo);
+		boardRepository.insertComment(vo);
+	}
+
+	public void modify(BoardVo vo) {
+		boardRepository.modify(vo);
 	}
 }

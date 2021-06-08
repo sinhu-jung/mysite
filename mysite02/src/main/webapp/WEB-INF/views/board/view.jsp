@@ -36,11 +36,11 @@
 				</table>
 				<div class="bottom">
 						<c:if test="${not empty authUser }">
-							<a href='${pageContext.request.contextPath }/board?a=writeform&msg=comment&no=${vo.no}'>댓글달기</a>
+							<a href='${pageContext.request.contextPath }/board/comment?msg=comment&no=${vo.no}'>댓글달기</a>
 						</c:if>
 						<a href="${pageContext.request.contextPath }/board">글목록</a>
 						<c:if test="${not empty authUser and vo.userNo == authUser.no}">
-							<a href="${pageContext.request.contextPath }/board?a=modifyform&userNo=${vo.userNo}&no=${vo.no}">글수정</a>
+							<a href="${pageContext.request.contextPath }/board/modifyform?userNo=${vo.userNo}&no=${vo.no}">글수정</a>
 						</c:if>
 				</div>
 			</div>

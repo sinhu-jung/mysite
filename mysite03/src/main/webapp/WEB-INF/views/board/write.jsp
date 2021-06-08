@@ -15,6 +15,15 @@
 		<div id="content">
 			<div id="board">
 				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board/write">
+					<c:choose>
+						<c:when test='${msg eq "comment" }'>
+							<input type = "hidden" name = "msg" value="comment">
+							<input type = "hidden" name = "no" value="${no }">
+						</c:when>
+						<c:when test='${msg eq "write" }'>
+							<input type = "hidden" name = "msg" value="write">
+						</c:when>
+					</c:choose>
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>
@@ -31,7 +40,7 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board/0">취소</a>
+						<a href="${pageContext.request.contextPath }/board">취소</a>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

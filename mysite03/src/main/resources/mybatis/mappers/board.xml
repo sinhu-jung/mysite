@@ -1,4 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
+	<insert id="insert" parameterType="boardvo">
+		<![CDATA[
+		insert 
+			into board 
+		values(null, #{title }, #{contents }, now(), 0, (select IF(isnull(max(group_no)+1), 1, max(group_no)+1) from board ALIAS_FOR_SUBQUERY), 0, 0, #{userNo })
+		]]>
+	</insert>
+	
+	<select id="findById" parameterType="long" resultType="boardvo" >
+		<![CDATA[
+		select no, title, contents, user_no, group_no, order_no, depth, hit
+			from board
+		where no=#{no }
+		]]>
+	</select>
+	
+	<delete id="delete" parameterType="map" >
+		<![CDATA[
+		delete 
+			from board 
+		where no=#{no } 
+			and user_no=#{userNo }
+		]]>
+	</delete>
+	
+	<update id="update" parameterType="boardVo">
+		<![CDATA[
+		update board set title=#{title }, contents=#{contents } where no=#{no }
+		]]>
+	</update>
+	
+	<update id="updateHit" parameterType="boardVo">
+		<![CDATA[
+		update board set hit=#{hit } where no =#{no }
+		]]>
+	</update>
 </mapper>
