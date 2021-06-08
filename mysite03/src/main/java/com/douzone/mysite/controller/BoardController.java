@@ -59,8 +59,5 @@ public class BoardController {
 		return "redirect:/board/0";
 	}
 	
-	public String comment() {
-		
-	}
 	
 }
