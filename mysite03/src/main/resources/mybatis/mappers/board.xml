@@ -11,7 +11,7 @@
 	
 	<select id="findById" parameterType="long" resultType="boardvo" >
 		<![CDATA[
-		select no, title, contents, user_no, group_no, order_no, depth, hit
+		select no, title, contents, reg_date as regDate, hit, group_no as groupNo, order_no as orderNo, depth, user_no as userNo
 			from board
 		where no=#{no }
 		]]>
@@ -37,4 +37,30 @@
 		update board set hit=#{hit } where no =#{no }
 		]]>
 	</update>
+	
+	<insert id="insertComment" parameterType="boardvo">
+		<![CDATA[
+		insert 
+			into board 
+		values(null, #{title }, #{contents }, now(), 0, #{groupNo }, #{orderNo }, #{depth }, #{userNo })
+		]]>
+	</insert>
+	
+	<update id="updateComment" parameterType="boardvo">
+		<choose>
+			<when test="orderNo > 1" >
+				<![CDATA[
+					update board set order_no=order_no+1 where group_no = #{groupNo } and order_no>#{orderNo }
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					update board set order_no=order_no+1 where group_no = #{groupNo } and order_no>=1
+				]]>
+			</otherwise>
+		</choose>
+	</update>
+	
+	
+	
 </mapper>

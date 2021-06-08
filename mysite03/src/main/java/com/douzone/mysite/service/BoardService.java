@@ -75,7 +75,7 @@ public class BoardService {
 	}
 
 	public void commentAction(String title, String content, Long no, UserVo authUser) {
-		BoardVo vo1 = new BoardRepository().findById(no);
+		BoardVo vo1 = boardRepository.findById(no);
 		int groupNo = vo1.getGroupNo();
 		int depth = vo1.getDepth();
 		int orderNo = vo1.getOrderNo();
@@ -93,7 +93,7 @@ public class BoardService {
 		}
 		
 		vo.setDepth(depth + 1);
-		boardRepository.updatComment(groupNo, orderNo);
+		boardRepository.updatComment(vo1);
 		boardRepository.insertComment(vo);
 	}
 

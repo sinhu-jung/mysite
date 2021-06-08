@@ -44,50 +44,20 @@ public class BoardRepository {
 	}
 	
 	public boolean updateHit(BoardVo vo) {
-		int count = sqlSession.update("board.update", vo);
+		int count = sqlSession.update("board.updateHit", vo);
 		return count == 1;
 	}
 	
 	public boolean insertComment(BoardVo vo) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		boolean result = false;
-		try {
-			conn = getConnection();
-			String sql = null;
-			sql = "insert into board values(null, ?, ?, now(), 0, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, vo.getTitle());
-			pstmt.setString(2, vo.getContents());
-			pstmt.setInt(3, vo.getGroupNo());
-			pstmt.setInt(4, vo.getOrderNo());
-			pstmt.setInt(5, vo.getDepth());
-			pstmt.setLong(6, vo.getUserNo());
-
-			int count = pstmt.executeUpdate();
-			result = count == 1;
-
-		} catch (SQLException e) {
-			System.out.println("error: " + e);
-		} finally {
-			try {
-				// 자원 정리(clean-up)
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return result;
-		
+		int count = sqlSession.insert("board.insertComment", vo);
+		return count == 1;
 	}
 
+	public Boolean updatComment(BoardVo vo) {
+		int count = sqlSession.update("board.updateComment", vo);
+		return count == 1;
+	}
+	
 	public int findcount(String keyword) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -135,49 +105,6 @@ public class BoardRepository {
 		}
 
 		return -1;
-	}
-	
-	public Boolean updatComment(int no, int orderNo) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		boolean result = false;
-
-		try {
-			conn = getConnection();
-			String sql = null;
-			if(orderNo > 1) {
-				sql = "update board set order_no=order_no+1 where group_no = ? and order_no>?";
-			} else {
-				sql = "update board set order_no=order_no+1 where group_no = ? and order_no>=1";
-			}
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setInt(1, no);
-			if(orderNo > 1) {
-				pstmt.setInt(2, orderNo);
-			}
-
-			int count = pstmt.executeUpdate();
-			result = count == 1;
-
-		} catch (SQLException e) {
-			System.out.println("error:" + e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-
-				if (conn != null) {
-					conn.close();
-				}
-
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-		}
-
-		return result;
 	}
 	
 	private Connection getConnection() throws SQLException {
