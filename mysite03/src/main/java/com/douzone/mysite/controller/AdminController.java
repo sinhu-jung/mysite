@@ -52,6 +52,6 @@ public class AdminController {
 		String url = fileUploadService.restore(file1);
 		vo.setprofileURL(url);
 		adminService.update(vo);
-		return "redirect:/";
+		return "redirect:/admin";
 	}
 }
