@@ -20,11 +20,12 @@ public class AdminRepository {
 		try {
 			conn = getConnection();
 
-			String sql = "update site set welcome=?, description=? ";
+			String sql = "update site set welcome=?, description=?, profile=?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, vo.getWelcomeMessage());
 			pstmt.setString(2, vo.getDescription());
+			pstmt.setString(3, vo.getprofileURL());
 
 			int count = pstmt.executeUpdate();
 			result = count == 1;
