@@ -19,7 +19,7 @@ public class BoardService {
 	public Map<String, Object> viewPage(int page, String kwd) {
 		int listSize = 5;
 		int pageSize = 5;
-		int totalCount = new BoardRepository().findcount(kwd);
+		int totalCount = boardRepository.findcount(kwd);
 		int pageCount = (int)Math.ceil( (double)totalCount / listSize );
 		int blockCount = (int)Math.ceil( (double)pageCount / pageSize );
 		int currentBlock = (int)Math.ceil( (double)page / pageSize );

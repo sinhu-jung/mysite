@@ -38,6 +38,13 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 		
+		<!-- Spring Aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+ 			<artifactId>spring-aspects</artifactId>
+ 			<version>${org.springframework-version}</version>
+		</dependency>
+				
 		<!-- Spring Web(DispatcherServlet, ContextLoadListener -->
 		<dependency>
 			<groupId>org.springframework</groupId>
