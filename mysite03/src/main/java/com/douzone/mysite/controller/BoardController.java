@@ -102,6 +102,4 @@ public class BoardController {
 		boardService.modify(vo);
 		return "redirect:/board";
 	}
-	
-	
 }
