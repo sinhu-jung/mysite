@@ -13,7 +13,16 @@
 $(function(){
 	btn = $('#btn-check');
 	btn.click(function(){
-		console.log(".....");
+		param = {
+		}
+		$.ajax({
+				url:"/mysite03/user/api/checkemail?email=dooly@gmail.com",
+				type:"get",
+				dataType:"json",
+				success:function(response){
+					console.log(response.no);				
+				}
+		});
 	});
 })
 </script>
