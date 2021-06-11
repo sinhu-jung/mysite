@@ -49,6 +49,15 @@
 	<!-- mvs resources mapping -->
 	<mvc:resources location="file:/uploads-mysite/" mapping="/images/**"/>	
 
+	 <!-- 6. MessageSource -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	   <property name="basenames">
+	     <list>
+			<value>messages/messages_ko</value>
+	     </list>
+	   </property>
+	</bean>
+
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
 	<mvc:default-servlet-handler/>
 	
