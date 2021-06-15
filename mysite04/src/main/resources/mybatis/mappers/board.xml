@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<insert id="insert" parameterType="boardvo">
+		<![CDATA[
+		insert 
+			into board 
+		values(null, #{title }, #{contents }, now(), 0, (select IF(isnull(max(group_no)+1), 1, max(group_no)+1) from board ALIAS_FOR_SUBQUERY), 0, 0, #{userNo })
+		]]>
+	</insert>
+	
+	<select id="findById" parameterType="long" resultType="boardvo" >
+		<![CDATA[
+		select no, title, contents, reg_date as regDate, hit, group_no as groupNo, order_no as orderNo, depth, user_no as userNo
+			from board
+		where no=#{no }
+		]]>
+	</select>
+	
+	<delete id="delete" parameterType="map" >
+		<![CDATA[
+		delete 
+			from board 
+		where no=#{no } 
+			and user_no=#{userNo }
+		]]>
+	</delete>
+	
+	<update id="update" parameterType="boardVo">
+		<![CDATA[
+		update board set title=#{title }, contents=#{contents } where no=#{no }
+		]]>
+	</update>
+	
+	<update id="updateHit" parameterType="boardVo">
+		<![CDATA[
+		update board set hit=#{hit } where no =#{no }
+		]]>
+	</update>
+	
+	<insert id="insertComment" parameterType="boardvo">
+		<![CDATA[
+		insert 
+			into board 
+		values(null, #{title }, #{contents }, now(), 0, #{groupNo }, #{orderNo }, #{depth }, #{userNo })
+		]]>
+	</insert>
+	
+	<update id="updateComment" parameterType="boardvo">
+		<choose>
+			<when test="orderNo > 1" >
+				<![CDATA[
+					update board set order_no=order_no+1 where group_no = #{groupNo } and order_no>#{orderNo }
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					update board set order_no=order_no+1 where group_no = #{groupNo } and order_no>=1
+				]]>
+			</otherwise>
+		</choose>
+	</update>
+	
+	<select id="findcount" parameterType="string" resultType="integer" >
+		<choose>
+			<when test="_parameter == null or _parameter == ''">
+				<![CDATA[
+					select count(*) from board
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					   select count(*)
+					  	from board b join user a on a.no = b.user_no
+					   where b.title like '%${_parameter }%' or b.contents like '%${_parameter }%' or a.name like '%${_parameter }%'
+				]]>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllByPageAndKeword" parameterType="map" resultType="boardvo" >
+		<choose>
+			<when test="kwd == null or kwd == ''">
+				<![CDATA[
+					 select a.no, a.title, a.depth, a.hit, b.no as userNo, b.name as userName, a.reg_date as regDate
+						 from board a, user b 
+					 where a.user_no = b.no 
+						 order by a.group_no DESC, a.order_no ASC limit #{start }, #{size }
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					 select b.no, b.title, b.depth, b.hit, b.user_no as userNo, a.name as userName, b.reg_date as regDate
+					     from board b join user a on a.no = b.user_no
+					  where b.title like '%${kwd }%' or b.contents like '%${kwd }%' or a.name like '%${kwd }%'
+					     order by b.group_no DESC, b.order_no ASC limit #{start }, #{size }
+				]]>
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>
