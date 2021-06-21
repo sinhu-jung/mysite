@@ -14,7 +14,7 @@
 	<aop:aspectj-autoproxy/>
 	
 	<!-- Validator, conversionService, messageConverter를 자동으로 등록 -->
-	<mvc:annotation-driven > 
+	<mvc:annotation-driven >
 		<mvc:message-converters>
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
     			<property name="supportedMediaTypes">
