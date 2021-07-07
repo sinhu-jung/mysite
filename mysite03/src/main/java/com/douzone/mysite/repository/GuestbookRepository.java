@@ -22,8 +22,8 @@ public class GuestbookRepository {
 		return sqlSession.selectList("guestbook.findAll");
 	}
 	
-	public List<GuestbookVo> findAll(Long no) {
-		return sqlSession.selectList("guestbook.findAllByNo", no);
+	public List<GuestbookVo> findAll(Long number) {
+		return sqlSession.selectList("guestbook.findAllByNo", number);
 	}
 	
 	public boolean delete(GuestbookVo vo) {
