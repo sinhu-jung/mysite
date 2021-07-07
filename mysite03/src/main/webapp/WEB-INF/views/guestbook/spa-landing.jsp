@@ -181,7 +181,7 @@
  }
  
 $(function() {
-	$("#btn-fetch").click(function(){
+	$(document).scroll(function(){
 		fetch();
 	});
 	
