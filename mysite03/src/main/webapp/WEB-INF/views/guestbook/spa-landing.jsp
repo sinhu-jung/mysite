@@ -11,6 +11,18 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+/* guestbook application based on jQuery */
+/*
+ 과제 ex1: 리스트
+ 	- no 기준의 리스트를 부분적(3개씩) 가져와서 렌더링을 하는 작업
+ 	- 버튼 이벤트 구현 -> 스크롤 이벤트 바꾼다.
+ 	- no 기준으로 동적 쿼리를 레포지토리에 구현
+ 	- 렌더링 참고: /ch08/test/gb/ex1
+ 
+ */
+ 
+</script>
 </head>
 <body>
 	<div id="container">
@@ -55,9 +67,11 @@
 						<strong></strong>
 						<a href='' data-no=''>삭제</a> 
 					</li>
-					
 									
 				</ul>
+				<div style="margin:20px 0 0 0">
+					<button id="btn-fetch">더 보기</button>
+				</div>
 			</div>
 			<div id="dialog-delete-form" title="메세지 삭제" style="display:none">
   				<p class="validateTips normal">작성시 입력했던 비밀번호를 입력하세요.</p>
