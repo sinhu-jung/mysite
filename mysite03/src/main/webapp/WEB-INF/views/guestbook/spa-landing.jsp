@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/assets/css/guestbook-spa.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/ejs/ejs.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 /* guestbook application based on jQuery */
@@ -36,6 +37,14 @@
  	- 렌더링 참고: /ch08/test/gb/ex3
  */
  
+ var listEJS = new EJS({
+		url: "${pageContext.request.contextPath }/ejs/list-template.ejs"
+	});
+ 
+ var listItemEJS = new EJS({
+ 	url: "${pageContext.request.contextPath }/ejs/listItem-template.ejs"
+ });
+ 
  var fetch = function() {
  		var no = $("#list-guestbook li:last").data("no");
  		if(no == null) {
@@ -46,16 +55,8 @@
 			dataType: "json", // 받을 때 포멧 
 			type: "get",	  // 요청 method
 			success: function(response){
-				response.data.forEach(function(vo){
-					html = 
-					"<li data-no='" + vo.no + "'>" + 
-						"<strong>"+ vo.name + "</strong>" +
-						"<p>"+ vo.message.replaceAll("\n", "</br>") +"</p>" +
-						"<strong></strong>" +
-						"<a href='' data-no='"+ vo.no +"'>삭제</a>" +
-					"</li>";
-					$("#list-guestbook").append(html);
-				});
+				var html = listEJS.render(response);
+				$("#list-guestbook").append(html);
 			}
 		});
 	}
@@ -107,17 +108,8 @@
 			contentType: "application/json",   
 			data: JSON.stringify(vo),
 			success: function(response){
-				var vo = response.data;
-				
-				html =
-					"<li data-no='" + vo.no + "'>" + 
-						"<strong>" + vo.name + "</strong>" +
-						"<p>" + vo.message + "</p>" +
-						"<strong></strong>" + 
-						"<a href='' data-no='" + vo.no + "'>삭제</a>" + 
-					"</li>";
-					
-				$("#list-guestbook").prepend(html);	
+				var html = listItemEJS.render(response.data);
+				$("#list-guestbook").prepend(html);
 			}
 		});		
 		
@@ -181,8 +173,14 @@
  }
  
 $(function() {
-	$(document).scroll(function(){
-		fetch();
+	$(window).scroll(function(){
+		var $window = $(this);
+		var windowHeight =  $window.height();
+		var scrollTop = $window.scrollTop();
+		var documentHeight = $(document).height();
+		if(scrollTop + windowHeight + 10 > documentHeight){
+			fetch();
+		}
 	});
 	
 	addlist();

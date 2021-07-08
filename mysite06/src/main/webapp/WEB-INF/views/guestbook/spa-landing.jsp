@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/assets/css/guestbook-spa.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/ejs/ejs.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 /* guestbook application based on jQuery */
@@ -35,7 +36,13 @@
  	- 삭제가 성공한 경우(no > 0), data-no=10 인 li element를 삭제
  	- 렌더링 참고: /ch08/test/gb/ex3
  */
+ var listEJS = new EJS({
+	url: "${pageContext.request.contextPath }/ejs/list-template.ejs"
+});
  
+ var listItemEJS = new EJS({
+ 	url: "${pageContext.request.contextPath }/ejs/listItem-template.ejs"
+ });
  var fetch = function() {
  		var no = $("#list-guestbook li:last").data("no");
  		if(no == null) {
@@ -46,30 +53,22 @@
 			dataType: "json", // 받을 때 포멧 
 			type: "get",	  // 요청 method
 			success: function(response){
-				response.data.forEach(function(vo){
-					html = 
-					"<li data-no='" + vo.no + "'>" + 
-						"<strong>"+ vo.name + "</strong>" +
-						"<p>"+ vo.message.replaceAll("\n", "</br>") +"</p>" +
-						"<strong></strong>" +
-						"<a href='' data-no='"+ vo.no +"'>삭제</a>" +
-					"</li>";
-					$("#list-guestbook").append(html);
-				});
+				var html = listEJS.render(response);
+				$("#list-guestbook").append(html);
 			}
 		});
 	}
 
- var valid = function(titles, message) { 
+ var valid = function(titles, message, callback) { 
 	 $("#dialog-message p").text(message);
-	 $("#dialog-message").attr("title", titles);
-	 $("#dialog-message").dialog({
+	 $("#dialog-message").attr("title", titles).dialog({
 			modal: true,
 			buttons: {
 				"확인": function(){
 					$("#dialog-message").dialog("close");
 				}
-			}				
+			},
+			close: callback
 		});
  }	
  
@@ -82,20 +81,26 @@
 			vo.name = $("#input-name").val();
 			// validation name
 			if(vo.name == "") {
-				valid("오류", "이름이 비었습니다.");
+				valid("오류", "이름이 비었습니다.", function(){
+					$("#input-name").focus();
+				});
 				return;
 			}
 			vo.password = $("#input-password").val();
 			// validation password
 			if(vo.password == "") {
-				valid("오류", "비밀번호가 비었습니다.");
+				valid("오류", "비밀번호가 비었습니다.", function(){
+					$("#input-password").focus();
+				});
 				return;
 			}
 			
 			vo.message = $("#tx-content").val();
 			// validation message
 			if(vo.message == "") {
-				valid("오류", "텍스트가 비었습니다.");
+				valid("오류", "텍스트가 비었습니다.", function(){
+					$("#tx-content").focus();
+				});
 				return;
 			}
 			
@@ -107,17 +112,16 @@
 			contentType: "application/json",   
 			data: JSON.stringify(vo),
 			success: function(response){
-				var vo = response.data;
+				if(response.result != "success"){
+					console.error(response.message);
+					return;
+				}
 				
-				html =
-					"<li data-no='" + vo.no + "'>" + 
-						"<strong>" + vo.name + "</strong>" +
-						"<p>" + vo.message + "</p>" +
-						"<strong></strong>" + 
-						"<a href='' data-no='" + vo.no + "'>삭제</a>" + 
-					"</li>";
-					
-				$("#list-guestbook").prepend(html);	
+				var html = listItemEJS.render(response.data);
+				$("#list-guestbook").prepend(html);
+				
+				// form reset
+				$("#add-form")[0].reset();
 			}
 		});		
 		
@@ -181,8 +185,14 @@
  }
  
 $(function() {
-	$(document).scroll(function(){
-		fetch();
+	$(window).scroll(function(){
+		var $window = $(this);
+		var windowHeight =  $window.height();
+		var scrollTop = $window.scrollTop();
+		var documentHeight = $(document).height();
+		if(scrollTop + windowHeight + 10 > documentHeight){
+			fetch();
+		}
 	});
 	
 	addlist();
