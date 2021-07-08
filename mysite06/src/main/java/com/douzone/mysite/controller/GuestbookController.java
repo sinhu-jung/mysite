@@ -43,9 +43,8 @@ public class GuestbookController {
 		return "redirect:/guestbook";
 	}
 	
-//	@ExceptionHandler(Exception.class)
-//	public String handlerException() { 
-//		return "error/exception";
-//		
-//	}
+	@RequestMapping("/spa")
+	public String spaLanding() {
+		return "guestbook/spa-landing";
+	}
 }

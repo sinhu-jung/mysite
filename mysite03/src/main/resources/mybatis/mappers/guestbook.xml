@@ -11,7 +11,7 @@
 		<choose>
 			<when test="_parameter == 0">
 				<![CDATA[
-				select no, name, password, message, reg_date as regDate from guestbook order by no desc limit 0, 3
+				select no, name, password, message, reg_date as regDate from guestbook order by no desc limit 0, 10
 				]]>			
 			</when>
 			<otherwise>

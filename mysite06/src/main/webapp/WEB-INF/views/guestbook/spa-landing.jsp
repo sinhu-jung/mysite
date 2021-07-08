@@ -144,7 +144,7 @@
 				$.ajax({
 					url: "${pageContext.request.contextPath }/guestbook/api/delete/" + no,
 					dataType: "json", // 받을 때 포멧 
-					type: "post",	  // 요청 method
+					type: "delete",	  // 요청 method
 					data: "password=" + password,
 					success: function(response){
 						if(response.result != "success") {
