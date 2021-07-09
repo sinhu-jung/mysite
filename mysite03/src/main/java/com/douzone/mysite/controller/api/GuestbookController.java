@@ -24,7 +24,6 @@ public class GuestbookController {
 	@ResponseBody
 	@RequestMapping(value="/list/{no}")
 	public JsonResult list(@PathVariable("no") Long no) {
-		System.out.println(no);
 		List<GuestbookVo> list = guestbookService.getMessageList(no);
 		return JsonResult.success(list);
 	}
