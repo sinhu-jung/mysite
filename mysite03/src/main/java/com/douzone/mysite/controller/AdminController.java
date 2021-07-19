@@ -1,5 +1,7 @@
 package com.douzone.mysite.controller;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,9 @@ public class AdminController {
 	
 	@Autowired
 	private FileUploadService fileUploadService;
+	
+	@Autowired
+	ServletContext application;
 	
 	@RequestMapping("")
 	public String main(Model model) {
@@ -52,6 +57,7 @@ public class AdminController {
 		String url = fileUploadService.restore(file1);
 		vo.setprofileURL(url);
 		adminService.update(vo);
+		application.setAttribute("title", vo.getTitle());
 		return "redirect:/admin";
 	}
 }
